@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Shop Parts Count</title>
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<style>
+body{font-family:system-ui,sans-serif;max-width:420px;margin:24px auto;padding:0 16px;color:#222}
+h1{font-size:1.3em}label{display:block;margin-top:12px;font-weight:600;font-size:.9em}
+input{width:100%;padding:10px;font-size:1em;box-sizing:border-box;border:1px solid #bbb;border-radius:6px}
+input[readonly]{background:#f2f2f2;color:#555}
+button{margin-top:18px;width:100%;padding:12px;font-size:1.05em;background:#1f6feb;color:#fff;border:0;border-radius:6px}
+#qr{display:flex;justify-content:center;margin:20px 0}.ok{margin-top:16px;padding:12px;background:#e6f7ea;border-radius:6px;display:none}
+small{color:#666}
+</style></head><body>
+<div id="gen">
+  <h1>Station QR Code</h1>
+  <div id="qr"></div>
+  <p><small>Scan with a phone camera to open the count form for this station.</small></p>
+  <p><small id="note"></small></p>
+</div>
+<form id="form" style="display:none">
+  <h1>Parts Count</h1>
+  <label>Station</label><input id="station" readonly>
+  <label>Part number</label><input id="pn" readonly>
+  <label>Part name</label><input id="name" readonly>
+  <label>Max quantity</label><input id="max" readonly>
+  <label>Remaining count now</label><input id="count" type="number" min="0" inputmode="numeric" required autofocus>
+  <button type="submit">Submit</button>
+  <div class="ok" id="ok"></div>
+</form>
+<script>
+const sample={station:"Line 3",pn:"PN-10482",name:"Gasket Seal",max:50};
+const p=new URLSearchParams(location.search);
+if(p.has("pn")){
+  document.getElementById("gen").style.display="none";
+  const f=document.getElementById("form");f.style.display="block";
+  for(const k of ["station","pn","name","max"]) document.getElementById(k).value=p.get(k)||"";
+  f.onsubmit=e=>{e.preventDefault();const c=+document.getElementById("count").value,mx=+p.get("max");
+    const ok=document.getElementById("ok");ok.style.display="block";
+    ok.textContent=`Thanks! Recorded ${c} of ${p.get("name")} (${p.get("pn")}) at ${p.get("station")}. Reorder about ${Math.max(mx-c,0)} to reach max.`;};
+}else{
+  const base=location.href.split("?")[0];
+  const url=base+"?"+new URLSearchParams(sample).toString();
+  new QRCode(document.getElementById("qr"),{text:url,width:240,height:240});
+  document.getElementById("note").textContent=location.protocol==="file:"
+   ? "Note: opened from your computer, so a phone can't reach this link. Host the file (free on GitHub Pages) and the QR will work from any phone. Preview the form here: "
+   : "Link: ";
+  const a=document.createElement("a");a.href=url;a.textContent="open form";document.getElementById("note").appendChild(a);
+}
+</script></body></html>

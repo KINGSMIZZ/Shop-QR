@@ -12,7 +12,7 @@ button{margin-top:18px;width:100%;padding:12px;font-size:1.05em;background:#1f6f
 small{color:#666}
 </style></head><body>
 <div id="gen">
-  <h1>Line 3 Parts Check</h1>
+  <h1>Parts Check</h1>
   <div id="qr"></div>
   <p><small>Scan with a phone camera to open the count form for this station.</small></p>
   <p><small id="note"></small></p>
@@ -28,7 +28,7 @@ small{color:#666}
   <div class="ok" id="ok"></div>
 </form>
 <script>
-const sample={station:"Line 3",pn:"PN-10482",name:"Lamp Can Assy",max:50};
+const sample={station:"Line 3",pn:"PN-10482",name:"Plates",max:50};
 const p=new URLSearchParams(location.search);
 if(p.has("pn")){
   document.getElementById("gen").style.display="none";
